@@ -9,22 +9,27 @@ from sklearn.metrics import log_loss
 def sweep_c(X_train, y_train, X_test, y_test, num=20):
     """Scan a geometric range of C values, recording accuracy and log loss."""
     C_list = np.geomspace(1e-5, 1e5, num=num)
-    CA = []
-    logarithimic_loss = []
+    accuracies = []
+    log_losses = []
 
     for c in C_list:
         log_reg = LogisticRegression(random_state=10, solver="lbfgs", C=c)
         log_reg.fit(X_train, y_train)
         score = log_reg.score(X_test, y_test)
-        CA.append(score)
-        print("CA of c param {} is {}".format(c, score))
-        pred_proba_t = log_reg.predict(X_test)
-        log_loss2 = log_loss(y_test, pred_proba_t)
-        logarithimic_loss.append(log_loss2)
-        print("Log Loss of C param {} is {}".format(c, log_loss2))
-        print("")
+        accuracies.append(score)
+        print(f"CA of c param {c} is {score}")
+        prediction = log_reg.predict(X_test)
+        loss = log_loss(y_test, prediction)
+        log_losses.append(loss)
+        print(f"Log Loss of C param {c} is {loss}")
+        print()
 
-    outcomes = zip(C_list, np.array(CA).reshape(num,), np.array(logarithimic_loss).reshape(num,))
+    outcomes = zip(
+        C_list,
+        np.array(accuracies).reshape(num),
+        np.array(log_losses).reshape(num),
+        strict=True,
+    )
     df_outcome = pd.DataFrame(outcomes, columns=["C_list", "CA2", "Logarithimic_loss2"])
     return df_outcome
 
@@ -53,5 +58,5 @@ def summarize_predictions(model, X_test, y_test):
     total_count = predict["Count"].sum()
 
     print("Test Acc:", model.score(X_test, y_test))
-    print("The number of correct predicion is:", total_count)
+    print("The number of correct predictions is:", total_count)
     return prediction
