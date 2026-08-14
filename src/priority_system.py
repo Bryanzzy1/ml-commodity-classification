@@ -11,16 +11,16 @@ def add_priority_scores(combined_data):
     and sales growth, excess inventory cost, GMROI, gross margin, and COGS.
     """
     # Inventory
-    conditions_inventory = [
-        (combined_data["months_of_supply"] <= 5)]
+    conditions_inventory = [combined_data["months_of_supply"] <= 5]
     values_inventory = [10]
 
     # Ranking
     conditions_ranking = [
-        (combined_data["abc_class"] == "A+"),
-        (combined_data["abc_class"] == "A"),
-        (combined_data["abc_class"] == "B"),
-        (combined_data["abc_class"] == "C"), ]
+        combined_data["abc_class"] == "A+",
+        combined_data["abc_class"] == "A",
+        combined_data["abc_class"] == "B",
+        combined_data["abc_class"] == "C",
+    ]
     values_ranking = [3, 2, 1, -5]
 
     # % Qty growth
@@ -58,8 +58,7 @@ def add_priority_scores(combined_data):
                                   (combined_data["inventory_gmroi"] < -3)]
     values_inventory_gmroi = [1, combined_data["inventory_gmroi"] / 2, -1.5]
 
-    # Gross Margin %
-    combined_data["gross_margin_pct"] = combined_data["gross_margin_pct"]
+    # Gross Margin % feeds the total score directly (no separate priority rule).
 
     # COGS + Decorating cost
     conditions_cogs_plus_decorating = [combined_data["cogs_plus_decorating"] == combined_data["cogs_plus_decorating"]]

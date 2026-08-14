@@ -37,32 +37,22 @@ def split_for_quantity(combined_data, random_state=15):
 
 def _hyperparameters():
     """Return the GBM hyperparameter search space and tuning arguments."""
-    nn_options = {
-        "num_epochs": 10,
-        "learning_rate": ag.space.Real(1e-4, 1e-2, default=5e-4, log=True),
-        "activation": ag.space.Categorical("relu", "softrelu", "tanh"),
-        "layers": ag.space.Categorical([100], [1000], [200, 100], [300, 200, 100]),
-        "dropout_prob": ag.space.Real(0.0, 0.5, default=0.1),
-    }
     gbm_options = {
         "num_boost_round": 100,
         "num_leaves": ag.space.Int(lower=26, upper=66, default=36),
     }
-    hyperparameters = {
-        "GBM": gbm_options,
-        # 'NN': nn_options,
-    }
+    hyperparameters = {"GBM": gbm_options}
     hyperparameter_tune_kwargs = {
         "num_trials": 5,
         "scheduler": "local",
         "searcher": "auto",
     }
-    return hyperparameters, hyperparameter_tune_kwargs, nn_options
+    return hyperparameters, hyperparameter_tune_kwargs
 
 
 def train(X_train, X_valid, time_limit=2 * 60):
     """Fit a TabularPredictor to estimate qty_buy."""
-    hyperparameters, hyperparameter_tune_kwargs, _ = _hyperparameters()
+    hyperparameters, hyperparameter_tune_kwargs = _hyperparameters()
     predictor_qty = TabularPredictor(label="qty_buy").fit(
         X_train, tuning_data=X_valid, time_limit=time_limit,
         hyperparameters=hyperparameters, hyperparameter_tune_kwargs=hyperparameter_tune_kwargs,

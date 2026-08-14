@@ -51,19 +51,18 @@ def report_performance(model, y_true, prediction, X_cv, y_cv, title="Confusion m
     recall = tp / (tp + fn)
     f1_score = 2 * (precision * recall) / (precision + recall)
 
-    # Print the accuracy, precision, recall, and F1-score, etc
     print("\n\nMetrics:")
     print("Accuracy: ", round(accuracy, 2))
     print("Precision: ", round(precision, 2))
     print("Recall: ", round(recall, 2))
     print("F1-score: ", round(f1_score, 2))
 
-    mse = mean_squared_error(y_true, prediction)
-    rmse = np.sqrt(mse)
-    print("RMSE Value : {:.2f}".format(rmse))
-    print("R2 Score value : {:.2f}".format(r2_score(y_true, prediction)))
+    rmse = np.sqrt(mean_squared_error(y_true, prediction))
+    print(f"RMSE Value : {rmse:.2f}")
+    print(f"R2 Score value : {r2_score(y_true, prediction):.2f}")
 
-    # Cross Validation
+    # Cross validation
     cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
-    n_scores = cross_val_score(model, X_cv, y_cv, scoring="accuracy", cv=cv, n_jobs=-1, error_score="raise")
-    print("Cross Validation Score: %.3f (%.3f)" % (np.mean(n_scores), np.std(n_scores)))
+    n_scores = cross_val_score(
+        model, X_cv, y_cv, scoring="accuracy", cv=cv, n_jobs=-1, error_score="raise")
+    print(f"Cross Validation Score: {np.mean(n_scores):.3f} ({np.std(n_scores):.3f})")
