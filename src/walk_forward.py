@@ -17,4 +17,4 @@ def add_forward_label(df, horizon=1):
     df["_future"] = df.groupby("product_id")["qty_last_12_month"].shift(-horizon)
     df = df.dropna(subset=["_future"])
     df["label"] = (df["_future"] > df["qty_last_12_month"]).astype(int)
-    return df
+    return df.drop(columns="_future")
