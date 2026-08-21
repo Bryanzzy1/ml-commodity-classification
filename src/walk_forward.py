@@ -18,3 +18,8 @@ def add_forward_label(df, horizon=1):
     df = df.dropna(subset=["_future"])
     df["label"] = (df["_future"] > df["qty_last_12_month"]).astype(int)
     return df.drop(columns="_future")
+
+
+def walk_forward_purged(df, horizon=1, min_train=1, embargo=0):
+    """Expanding-window folds; purge train rows whose label matures into the test period."""
+    periods = sorted(df["period"].unique())
