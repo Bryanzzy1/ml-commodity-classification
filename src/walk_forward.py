@@ -27,4 +27,5 @@ def walk_forward_purged(df, horizon=1, min_train=1, embargo=0):
     for k in range(min_train, len(periods)):
         train = df[(idx < k - embargo) & (idx + horizon < k)]  # time order + purge
         test = df[idx == k]
-        yield train, test
+        if not train.empty and not test.empty:
+            yield train, test
