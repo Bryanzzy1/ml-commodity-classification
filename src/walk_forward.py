@@ -24,3 +24,7 @@ def walk_forward_purged(df, horizon=1, min_train=1, embargo=0):
     """Expanding-window folds; purge train rows whose label matures into the test period."""
     periods = sorted(df["period"].unique())
     idx = df["period"].map({p: i for i, p in enumerate(periods)})
+    for k in range(min_train, len(periods)):
+        train = df[idx < k]
+        test = df[idx == k]
+        yield train, test
