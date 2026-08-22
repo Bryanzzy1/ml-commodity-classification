@@ -23,3 +23,4 @@ def add_forward_label(df, horizon=1):
 def walk_forward_purged(df, horizon=1, min_train=1, embargo=0):
     """Expanding-window folds; purge train rows whose label matures into the test period."""
     periods = sorted(df["period"].unique())
+    idx = df["period"].map({p: i for i, p in enumerate(periods)})
