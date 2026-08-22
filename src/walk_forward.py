@@ -25,6 +25,6 @@ def walk_forward_purged(df, horizon=1, min_train=1, embargo=0):
     periods = sorted(df["period"].unique())
     idx = df["period"].map({p: i for i, p in enumerate(periods)})
     for k in range(min_train, len(periods)):
-        train = df[idx < k - embargo]
+        train = df[(idx < k - embargo) & (idx + horizon < k)]  # time order + purge
         test = df[idx == k]
         yield train, test
