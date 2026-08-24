@@ -40,3 +40,4 @@ if __name__ == "__main__":
     for train, test in walk_forward_purged(df):
         k = order[test["period"].iloc[0]]
         assert (train["period"].map(order) + 1 < k).all()
+    print("OK: purge holds on every fold")
