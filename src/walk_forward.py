@@ -36,3 +36,4 @@ if __name__ == "__main__":
     rows = [{"product_id": p, "period": f"20{i:02d}", "qty_last_12_month": i}
             for p in "abc" for i in range(6)]
     df = add_forward_label(pd.DataFrame(rows))
+    order = {p: i for i, p in enumerate(sorted(df["period"].unique()))}
