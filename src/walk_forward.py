@@ -29,3 +29,10 @@ def walk_forward_purged(df, horizon=1, min_train=1, embargo=0):
         test = df[idx == k]
         if not train.empty and not test.empty:
             yield train, test
+
+
+if __name__ == "__main__":
+    # Purge must drop the seam: no train label may mature on/after its fold's test period.
+    rows = [{"product_id": p, "period": f"20{i:02d}", "qty_last_12_month": i}
+            for p in "abc" for i in range(6)]
+    df = add_forward_label(pd.DataFrame(rows))
