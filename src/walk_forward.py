@@ -37,3 +37,6 @@ if __name__ == "__main__":
             for p in "abc" for i in range(6)]
     df = add_forward_label(pd.DataFrame(rows))
     order = {p: i for i, p in enumerate(sorted(df["period"].unique()))}
+    for train, test in walk_forward_purged(df):
+        k = order[test["period"].iloc[0]]
+        assert (train["period"].map(order) + 1 < k).all()
